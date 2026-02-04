@@ -88,7 +88,7 @@ if password_input == ACCESS_PASSWORD:
             with st.spinner("🚀 Lisa is executing via gemini-2.0-flash..."):
                 try:
                     # Clean Architecture: Single Model Call
-                    model = genai.GenerativeModel("gemini-1.5-flash")
+                    model = genai.GenerativeModel("gemini-1.5-flash-latest")
                     full_prompt = f"{LISA_SYSTEM_PROMPT}\n\nSCRIPT:\n{user_script}"
                     
                     response = model.generate_content(full_prompt)
