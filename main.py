@@ -85,10 +85,10 @@ if password_input == ACCESS_PASSWORD:
     
     if st.button("Initialize Lisa"):
         if user_script:
-            with st.spinner("🚀 Lisa is executing via gemini-2.0-flash..."):
+            with st.spinner("🚀 Lisa is executing via gemini-pro..."):
                 try:
                     # Clean Architecture: Single Model Call
-                    model = genai.GenerativeModel("gemini-1.5-flash-latest")
+                    model = genai.GenerativeModel("gemini-pro")
                     full_prompt = f"{LISA_SYSTEM_PROMPT}\n\nSCRIPT:\n{user_script}"
                     
                     response = model.generate_content(full_prompt)
