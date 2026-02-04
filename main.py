@@ -4,7 +4,7 @@ import google.generativeai as genai
 # --- CONFIGURATION ---
 ACCESS_PASSWORD = "kent_secret_2026"
 
-# --- SYSTEM PROMPT (LISA v4.1 JSON) ---
+# --- SYSTEM PROMPT (LISA v4.1 JSON - UNTOUCHED) ---
 LISA_SYSTEM_PROMPT = """
 {
   "system_identity": {
@@ -82,7 +82,7 @@ LISA_SYSTEM_PROMPT = """
 }
 """
 
-# --- UI SETUP (META DARK MODE) ---
+# --- UI SETUP (META DARK MODE - UNTOUCHED) ---
 st.set_page_config(page_title="LISA v9.10", page_icon="lz", layout="wide")
 
 st.markdown("""
@@ -132,12 +132,15 @@ if password_input == ACCESS_PASSWORD:
     
     if st.button("Initialize Lisa"):
         if user_script:
-            with st.spinner("🚀 Lisa is executing via gemini-2.0-flash-lite..."):
+            # --- THE FIX: We use 'gemini-flash-latest' which was CONFIRMED in your scan ---
+            # This is the Universal Alias for Gemini 1.5 Flash. It has a working Free Tier.
+            target_model = "gemini-flash-latest"
+            
+            with st.spinner(f"🚀 Lisa is executing via {target_model}..."):
                 try:
-                    # Using the clean GenAI library for stability
-                    model = genai.GenerativeModel("gemini-2.0-flash-lite")
-                    
+                    model = genai.GenerativeModel(target_model)
                     full_prompt = f"{LISA_SYSTEM_PROMPT}\n\nSCRIPT:\n{user_script}"
+                    
                     response = model.generate_content(full_prompt)
                     
                     st.markdown("---")
@@ -146,8 +149,15 @@ if password_input == ACCESS_PASSWORD:
                     st.markdown(response.text)
                     
                 except Exception as e:
-                    st.error("❌ System Failure")
-                    st.code(f"Error details: {e}")
+                    # Auto-Fallback to Old Reliable if Flash fails
+                    try:
+                        st.warning("⚠️ Flash Busy, rerouting to Backup Engine (Pro)...")
+                        model = genai.GenerativeModel("gemini-pro")
+                        response = model.generate_content(full_prompt)
+                        st.markdown(response.text)
+                    except Exception as e2:
+                        st.error("❌ System Failure")
+                        st.code(f"Primary Error: {e}\nBackup Error: {e2}")
         else:
             st.warning("⚠️ Input Buffer Empty")
 
