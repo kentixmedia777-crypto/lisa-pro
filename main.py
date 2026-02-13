@@ -4,8 +4,7 @@ import google.generativeai as genai
 # --- CONFIGURATION ---
 ACCESS_PASSWORD = "kent_secret_2026"
 
-# --- SYSTEM PROMPT (LISA v4.2 JSON - FORTIFIED) ---
-# UPDATES: Strengthened unique faces, reduced flash frequency, added clothing variety.
+# --- SYSTEM PROMPT (LISA v4.2 JSON - FORTIFIED & UNTOUCHED) ---
 LISA_SYSTEM_PROMPT = """
 {
   "system_identity": {
@@ -83,20 +82,68 @@ LISA_SYSTEM_PROMPT = """
 }
 """
 
-# --- UI SETUP (META DARK MODE - UNTOUCHED) ---
-st.set_page_config(page_title="LISA v9.10", page_icon="lz", layout="wide")
+# --- UI SETUP (PROFESSIONAL DESIGN - UNTOUCHED) ---
+st.set_page_config(page_title="LISA PRO", page_icon="lz", layout="wide")
 
 st.markdown("""
 <style>
+    /* IMPORT PROFESSIONAL FONT (Inter) */
+    @import url('[https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap)');
+
     /* META DARK MODE THEME */
-    .stApp { background-color: #18191a; }
+    .stApp { background-color: #18191a; font-family: 'Inter', sans-serif; }
     [data-testid="stSidebar"] { background-color: #242526; border-right: 1px solid #3e4042; }
-    h1 { color: #2D88FF !important; font-family: 'Helvetica Neue', sans-serif; font-weight: 800; border-bottom: 1px solid #3e4042; padding-bottom: 15px; }
-    h3, h4, p, label, .stMarkdown { color: #e4e6eb !important; }
-    .stTextArea textarea, .stTextInput input { background-color: #3a3b3c !important; color: #e4e6eb !important; border: 1px solid #3e4042; border-radius: 8px; }
+    
+    /* CUSTOM TITLE HEADER */
+    .custom-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 900;
+        font-size: 3.5rem;
+        color: #2D88FF;
+        letter-spacing: -1px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+        text-transform: uppercase;
+    }
+    
+    .custom-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: 1.2rem;
+        color: #B0B3B8;
+        margin-top: -10px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #3e4042;
+        padding-bottom: 20px;
+        letter-spacing: 0.5px;
+    }
+
+    h3, h4, p, label, .stMarkdown { color: #e4e6eb !important; font-family: 'Inter', sans-serif; }
+    
+    /* INPUT FIELDS */
+    .stTextArea textarea, .stTextInput input { 
+        background-color: #3a3b3c !important; 
+        color: #e4e6eb !important; 
+        border: 1px solid #3e4042; 
+        border-radius: 8px; 
+        font-family: 'Inter', sans-serif;
+    }
     .stTextArea textarea:focus, .stTextInput input:focus { border-color: #2D88FF; box-shadow: 0 0 0 1px #2D88FF; }
-    .stButton>button { background-color: #2D88FF; color: white; border-radius: 6px; font-weight: 700; border: none; padding: 12px 24px; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* BUTTONS */
+    .stButton>button { 
+        background-color: #2D88FF; 
+        color: white; 
+        border-radius: 6px; 
+        font-weight: 700; 
+        border: none; 
+        padding: 12px 24px; 
+        text-transform: uppercase; 
+        letter-spacing: 0.5px;
+        font-family: 'Inter', sans-serif;
+    }
     .stButton>button:hover { background-color: #1877F2; box-shadow: 0 4px 12px rgba(45, 136, 255, 0.4); }
+    
     .stAlert { background-color: #242526; color: #e4e6eb; border: 1px solid #3e4042; }
     code { color: #e4e6eb; background-color: #3a3b3c; }
 </style>
@@ -111,9 +158,9 @@ except:
     API_STATUS = False
 
 # --- MAIN APP LAYOUT ---
-st.title("LISA v9.10")
-st.markdown("### AI Visual Architect | Dark Enterprise Edition")
-st.write("") 
+# Custom HTML Title for Professional Look
+st.markdown('<div class="custom-title">LISA</div>', unsafe_allow_html=True)
+st.markdown('<div class="custom-subtitle">Raw AI Image Prompter | Designed To Create</div>', unsafe_allow_html=True)
 
 password_input = st.sidebar.text_input("🔒 Access Portal", type="password", placeholder="Enter Password...")
 
@@ -129,7 +176,8 @@ if password_input == ACCESS_PASSWORD:
         st.sidebar.error("❌ Key Missing")
     
     st.markdown("#### 🎬 Script Ingestion")
-    user_script = st.text_area("Input Stream", height=300, placeholder="Paste your true crime script here...", label_visibility="collapsed")
+    # UPDATED PLACEHOLDER
+    user_script = st.text_area("Input Stream", height=300, placeholder="Paste your script here Oppa!", label_visibility="collapsed")
     
     st.write("") # Spacer
     
@@ -138,7 +186,8 @@ if password_input == ACCESS_PASSWORD:
             # Using the primary paid model for best results
             target_model = "gemini-flash-latest"
             
-            with st.spinner(f"🚀 Lisa is executing via {target_model} (Paid Tier)..."):
+            # --- UPDATED: STEALTH MODE LOADING TEXT ---
+            with st.spinner("Lisa is thinking......"):
                 try:
                     model = genai.GenerativeModel(target_model)
                     full_prompt = f"{LISA_SYSTEM_PROMPT}\n\nSCRIPT:\n{user_script}"
